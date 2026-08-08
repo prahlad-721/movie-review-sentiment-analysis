@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from app.schemas import ReviewRequest, PredictionResponse
 from fastapi.middleware.cors import CORSMiddleware
 import joblib
-
+from app.utils import clean_text
 app = FastAPI(
     title="Movie Review Sentiment API",
     version="1.0"
