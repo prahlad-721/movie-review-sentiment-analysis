@@ -1,9 +1,14 @@
 import re
 import string
 
+import nltk
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+
+nltk.download("stopwords")
+nltk.download("wordnet")
+nltk.download("omw-1.4")
 
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
