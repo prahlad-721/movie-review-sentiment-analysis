@@ -15,31 +15,29 @@ review = st.text_area(
     height=200,
     placeholder="Example: This movie was amazing!"
 )
-
 if st.button("Predict"):
 
     if review.strip() == "":
         st.warning("Please enter a review.")
     else:
+        with st.spinner("Analyzing... (first request may take up to a minute if the server was idle)"):
+            try:
+                response = requests.post(
+                    "https://movie-review-sentiment-analysis-w2eo.onrender.com/predict",
+                    json={"review": review},
+                    timeout=90
+                )
 
-        response = requests.post(
-            "http://127.0.0.1:8000/predict",
-            json={
-                "review": review
-            }
-        )
+                if response.status_code == 200:
+                    result = response.json()
+                    sentiment = result["sentiment"]
 
-        if response.status_code == 200:
+                    if sentiment.lower() == "positive":
+                        st.success("😊 Positive Review")
+                    else:
+                        st.error("😞 Negative Review")
+                else:
+                    st.error("Prediction Failed")
 
-            result = response.json()
-
-            sentiment = result["sentiment"]
-
-            if sentiment.lower() == "positive":
-                st.success("😊 Positive Review")
-
-            else:
-                st.error("😞 Negative Review")
-
-        else:
-            st.error("Prediction Failed")
+            except requests.exceptions.RequestException:
+                st.error("Could not reach the prediction server. Please try again.")
